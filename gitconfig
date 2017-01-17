@@ -1,7 +1,12 @@
 [color]
   ui = auto
 [alias]
+  st = status
+  br = branch
+  co = checkout
+  ci = commit
   aa = add --all
   staged = diff --staged
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 [core]
 	editor = vim
