@@ -7,7 +7,7 @@ setopt prompt_subst
 zstyle ':vcs_info:*' enable git
 
 # disable if slow, use python
-zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' check-for-changes false
 
 # Add ! for unstaged changes, on prompt maps to %u
 zstyle ':vcs_info:*' unstagedstr '%{%F{red}%B%}!%{%b%f%}'
