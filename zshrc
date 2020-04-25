@@ -1,7 +1,3 @@
-# directory of zshrc that works from anywhere
-# man zshexpn (HISTORY EXPANSION)
-__GIT_PROMPT_DIR="${0:A:h}"
-
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
@@ -39,7 +35,7 @@ function precmd_update_git_vars() {
 function update_current_git_vars() {
   unset __CURRENT_GIT_STATUS
 
-  local gitstatus="$__GIT_PROMPT_DIR/gitstatus.py"
+  local gitstatus="$HOME/.gitstatus.py"
   _GIT_STATUS=$(python ${gitstatus} 2>/dev/null)
   __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
   GIT_BRANCH=$__CURRENT_GIT_STATUS[1]
@@ -77,11 +73,11 @@ git_super_status() {
     fi
 
     if [ "$GIT_CHANGED" -ne "0" ]; then
-      STATUS="$STATUS%F{green}%{✚%G%}$GIT_CHANGED"
+      STATUS="$STATUS%F{red}%{✚%G%}$GIT_CHANGED"
     fi
 
     if [ "$GIT_UNTRACKED" -ne "0" ]; then
-      STATUS="$STATUS%F{red}%{…%G%}$GIT_UNTRACKED"
+      STATUS="$STATUS%F{red}%{…%G%}"
     fi
 
     if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]; then
