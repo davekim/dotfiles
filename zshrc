@@ -106,3 +106,7 @@ export PATH="/usr/local/sbin:$PATH"
 PROMPT='%F{5}[%F{2}%n%F{5}] %F{3}%3~ $(git_super_status)%f%# '
 
 export CLICOLOR=1
+
+# For rbenv
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+eval "$(rbenv init -)"
