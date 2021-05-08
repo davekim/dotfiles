@@ -104,3 +104,5 @@ zstyle ':vcs_info:*' enable git
 # zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
 export PATH="/usr/local/sbin:$PATH"
 PROMPT='%F{5}[%F{2}%n%F{5}] %F{3}%3~ $(git_super_status)%f%# '
+
+export CLICOLOR=1
