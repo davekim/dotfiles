@@ -102,11 +102,11 @@ zstyle ':vcs_info:*' enable git
 # zstyle ':vcs_info:*' formats '%F{5}(%F{2}%b%F{5})%f %m%u%c '
 
 # zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
-export PATH="/usr/local/sbin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 PROMPT='%F{5}[%F{2}%n%F{5}] %F{3}%3~ $(git_super_status)%f%# '
 
 export CLICOLOR=1
 
 # For rbenv
-export PATH="/usr/local/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/ruby/bin:$PATH"
 eval "$(rbenv init -)"
