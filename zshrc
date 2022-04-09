@@ -113,3 +113,8 @@ eval "$(rbenv init -)"
 
 # For Java
 export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+
+if [ -z "$TMUX" ]
+then
+    tmux attach -t TMUX || tmux new -s TMUX
+fi
