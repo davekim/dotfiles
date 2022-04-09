@@ -110,3 +110,6 @@ export CLICOLOR=1
 # For rbenv
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 eval "$(rbenv init -)"
+
+# For Java
+export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
