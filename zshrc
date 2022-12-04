@@ -1,9 +1,11 @@
-autoload -Uz vcs_info
+if ! type vcs_info > /dev/null 2>&1; then
+  # (-U autoload w/o substition, -z use zsh style)
+  autoload -Uz vcs_info add-zsh-hook || return 1
+fi
+
+# run vcs_info just before a prompt is displayed (precmd)
 precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
-setopt prompt_subst
-
-autoload -U add-zsh-hook
 
 # executed whenever current working directory is changed
 add-zsh-hook chpwd chpwd_update_git_vars
@@ -92,26 +94,76 @@ git_super_status() {
 # enable git
 zstyle ':vcs_info:*' enable git
 
-# Add ! for unstaged changes, on prompt maps to %u
-# zstyle ':vcs_info:*' unstagedstr '%{%F{red}%B%}!%{%b%f%}'
+# enable checking for (un)staged changes, enabling use of %u and %c
+zstyle ':vcs_info:*' check-for-changes true
 
-# Add + for staged changes, on prompt maps to %c
-# zstyle ':vcs_info:*' stagedstr '%{%F{green}%B%}+%{%b%f%}'
+# set custom symbols for unstaged/staged changes
+zstyle ':vcs_info:*' unstagedstr '*'
+zstyle ':vcs_info:*' stagedstr '+'
 
-# zstyle ':vcs_info:*' actionformats '%F{5}(%F{2}%b%F{5})%f %m%u%c '
-# zstyle ':vcs_info:*' formats '%F{5}(%F{2}%b%F{5})%f %m%u%c '
+# show market (T) if there are untracked files
++vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+        git status --porcelain | grep -q '^?? ' 2> /dev/null ; then
+        # This will show the marker if there are any untracked files in repo.
+        # If instead you want to show the marker only if there are untracked
+        # files in $PWD, use:
+        #[[ -n $(git ls-files --others --exclude-standard) ]] ; then
+        hook_com[staged]+='%F{magenta}?'
+    fi
+}
 
-# zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
-export PATH="/opt/homebrew/bin:$PATH"
-PROMPT='%F{5}[%F{2}%n%F{5}] %F{3}%3~ $(git_super_status)%f%# '
+### git: Show +N/-N when your local branch is ahead-of or behind remote HEAD.
+# Make sure you have added misc to your 'formats':  %m
+function +vi-git-st() {
+    local ahead behind
+    local -a gitstatus
+
+    # Exit early in case the worktree is on a detached HEAD
+    git rev-parse ${hook_com[branch]}@{upstream} >/dev/null 2>&1 || return 0
+
+    local -a ahead_and_behind=(
+        $(git rev-list --left-right --count HEAD...${hook_com[branch]}@{upstream} 2>/dev/null)
+    )
+
+    ahead=${ahead_and_behind[1]}
+    behind=${ahead_and_behind[2]}
+
+    (( $ahead )) && gitstatus+=( "↑${ahead}" )
+    (( $behind )) && gitstatus+=( "↓${behind}" )
+
+    hook_com[misc]+=${(j:/:)gitstatus}
+}
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked git-st
+
+# In normal formats and actionformats the following replacements are done:
+#   %s : The VCS in use (git, hg, svn, etc.).
+#   %b : Information about the current branch.
+#   %a : An identifier that describes the action. Only makes sense in actionformats (rebase, merge, cherry-pick).
+#   %r : The repository name. If %R is /foo/bar/repoXY, %r is repoXY.
+#   %c : The string from the stagedstr style if there are staged changes in the repository.
+#   %u : The string from the unstagedstr style if there are unstaged changes in the repository.
+#
+# Put the data into vcs_info_msg_*_ variables.
+zstyle ':vcs_info:git:*' formats       '%F{white}(%F{blue}%b%F{white}%m|%F{red}%u%F{green}%c%f)'
+zstyle ':vcs_info:git:*' actionformats '%F{white}(%F{blue}%b%F{white}%m|%a%F{red}%u%F{green}%c%f)'
+
+# enable substitution on the prompt
+setopt prompt_subst
+
+# add git status to prompt
+# %n - username
+# %m - hostname
+PROMPT='%F{5}[%F{2}%n%F{5}] %F{3}%3~ ${vcs_info_msg_0_}%f%# '
+
+# to debug hooks (comment back in)
+# zstyle ':vcs_info:*+*:*' debug true
 
 export CLICOLOR=1
 
-# For rbenv
+export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 eval "$(rbenv init -)"
-
-# For Java
 export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
 
 if [ -z "$TMUX" ]
