@@ -49,47 +49,6 @@ function update_current_git_vars() {
   GIT_UNTRACKED=$__CURRENT_GIT_STATUS[7]
 }
 
-# Adapted from https://github.com/ohmyzsh/ohmyzsh/blob/master/plugins/git-prompt/git-prompt.plugin.zsh
-git_super_status() {
-  precmd_update_git_vars
-  if [ -n "$__CURRENT_GIT_STATUS" ]; then
-
-    STATUS="%F{white}(%F{blue}$GIT_BRANCH"
-
-    if [ "$GIT_BEHIND" -ne "0" ]; then
-      STATUS="$STATUS%F{white}%{↓%G%}$GIT_BEHIND"
-    fi
-
-    if [ "$GIT_AHEAD" -ne "0" ]; then
-      STATUS="$STATUS%F{white}%{↑%G%}$GIT_AHEAD"
-    fi
-
-    STATUS="$STATUS%F{white}|"
-
-    if [ "$GIT_STAGED" -ne "0" ]; then
-      STATUS="$STATUS%F{green}%{●%G%}$GIT_STAGED"
-    fi
-
-    if [ "$GIT_CONFLICTS" -ne "0" ]; then
-      STATUS="$STATUS%F{red}%{✖%G%}$GIT_CONFLICTS"
-    fi
-
-    if [ "$GIT_CHANGED" -ne "0" ]; then
-      STATUS="$STATUS%F{red}%{✚%G%}$GIT_CHANGED"
-    fi
-
-    if [ "$GIT_UNTRACKED" -ne "0" ]; then
-      STATUS="$STATUS%F{red}%{…%G%}"
-    fi
-
-    if [ "$GIT_CHANGED" -eq "0" ] && [ "$GIT_CONFLICTS" -eq "0" ] && [ "$GIT_STAGED" -eq "0" ] && [ "$GIT_UNTRACKED" -eq "0" ]; then
-      STATUS="$STATUS%F{white}%{✔%G%}"
-    fi
-
-    STATUS="$STATUS%F{white})%f"
-    echo "$STATUS"
-  fi
-}
 
 # enable git
 zstyle ':vcs_info:*' enable git
