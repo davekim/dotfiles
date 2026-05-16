@@ -1,21 +1,20 @@
 [color]
-  ui = auto
+	ui = auto
 [alias]
-  st = status
-  br = branch
-  co = checkout
-  ci = commit
-  aa = add --all
-  staged = diff --staged
-  ls = log --graph --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --all
+	st = status
+	br = branch
+	co = checkout
+	ci = commit
+	aa = add --all
+	staged = diff --staged
+	ls = log --graph --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --all
 [core]
-  editor = nvim
-[user]
-  name = davekim
-  email = davekim@users.noreply.github.com
+	editor = nvim
 [credential]
-  helper = osxkeychain
-[url "git@github.com:"]
-  insteadOf = https://github.com/
+	helper = osxkeychain
 [push]
-  autoSetupRemote = true
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[include]
+	path = ~/.gitconfig.local
