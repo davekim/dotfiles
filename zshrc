@@ -101,7 +101,7 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr '*'
 zstyle ':vcs_info:*' stagedstr '+'
 
-# show market (T) if there are untracked files
+# show marker if there are untracked files
 +vi-git-untracked(){
     if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
         git status --porcelain | grep -q '^?? ' 2> /dev/null ; then
