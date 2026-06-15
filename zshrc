@@ -1,54 +1,7 @@
-if ! type vcs_info > /dev/null 2>&1; then
-  # (-U autoload w/o substition, -z use zsh style)
-  autoload -Uz vcs_info add-zsh-hook || return 1
-fi
+autoload -Uz vcs_info add-zsh-hook
 
-# run vcs_info just before a prompt is displayed (precmd)
 precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-
-# executed whenever current working directory is changed
-add-zsh-hook chpwd chpwd_update_git_vars
-
-# executed before the next prompt is displayed
-add-zsh-hook precmd precmd_update_git_vars
-
-# executed before a command is executed
-add-zsh-hook preexec preexec_update_git_vars
-
-function chpwd_update_git_vars() {
-  update_current_git_vars
-}
-
-function preexec_update_git_vars() {
-  case "$2" in
-    git*)
-      __EXECUTED_GIT_COMMAND=1
-      ;;
-  esac
-}
-function precmd_update_git_vars() {
-  if [ -n "$__EXECUTED_GIT_COMMAND" ]; then
-    update_current_git_vars
-    unset __EXECUTED_GIT_COMMAND
-  fi
-}
-
-function update_current_git_vars() {
-  unset __CURRENT_GIT_STATUS
-
-  local gitstatus="$HOME/.gitstatus.py"
-  _GIT_STATUS=$(python3 "${gitstatus}" 2>/dev/null)
-  __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
-  GIT_BRANCH=$__CURRENT_GIT_STATUS[1]
-  GIT_AHEAD=$__CURRENT_GIT_STATUS[2]
-  GIT_BEHIND=$__CURRENT_GIT_STATUS[3]
-  GIT_STAGED=$__CURRENT_GIT_STATUS[4]
-  GIT_CONFLICTS=$__CURRENT_GIT_STATUS[5]
-  GIT_CHANGED=$__CURRENT_GIT_STATUS[6]
-  GIT_UNTRACKED=$__CURRENT_GIT_STATUS[7]
-}
-
+add-zsh-hook precmd precmd_vcs_info
 
 # enable git
 zstyle ':vcs_info:*' enable git

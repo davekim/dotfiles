@@ -4,7 +4,7 @@ require 'fileutils'
 working_dir = File.expand_path(File.dirname(__FILE__))
 home_dir = File.expand_path("~")
 
-DOTFILES = %w[gitconfig gitstatus.py tmux.conf zshrc].freeze
+DOTFILES = %w[gitconfig tmux.conf zshrc].freeze
 
 DOTFILES.each do |name|
   filename = File.join(working_dir, name)
